@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat')
 
-
+// also used to be reply schema in the pizza hunt challenge for future reference.
 const ReactionSchema = new Schema(
     {
         //set custom id to avoid confusion with parent thought id
@@ -14,7 +14,7 @@ const ReactionSchema = new Schema(
             required: true, 
             maxlength: 280
         },
-        writtenBy: {
+        username: {
             type: String,
             required: true,
             trim: true
@@ -27,8 +27,10 @@ const ReactionSchema = new Schema(
     },
         {
             toJSON: {
+                virtuals: true,
                 getters:true
             },
+            id: false
         }
     );
     const ThoughtSchema = new Schema(
