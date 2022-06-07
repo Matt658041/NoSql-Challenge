@@ -20,6 +20,12 @@ const UserSchema = new Schema (
             message: "Please enter a valid email"
       }
      },
+     friends: [
+         {
+             type:Schema.Types.ObjectId,
+             ref: 'Thought'
+         }
+     ],
      thoughts: [
          {
              type: Schema.Types.ObjectId,
@@ -38,11 +44,9 @@ const UserSchema = new Schema (
 );
 
 //get count of thougths and reaction on retreival
-UserSchema.vitual('friendCount').get(function() {
-    return this.friends.reduce(
-       (total, friend) => total + friend.replies.length +1,
-       0
-    );
+UserSchema.virtual('friendCount').get(function() {
+    return this.friends.lenght;
+       
 });
 
 const User = model('user', UserSchema);
