@@ -8,6 +8,11 @@ const UserSchema = new Schema (
           trim: true,
           unique: true
       },
+      createdAt: {
+          type: Date,
+          default: Date.now,
+          get: createdAtVal =. dateFormat(createdAtVal)
+      },
       email: {
           type: String,
           required:[ true, "Email required"],
@@ -45,7 +50,7 @@ const UserSchema = new Schema (
 
 //get count of thougths and reaction on retreival
 UserSchema.virtual('friendCount').get(function() {
-    return this.friends.lenght;
+    return this.friends.length;
        
 });
 
