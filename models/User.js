@@ -50,7 +50,10 @@ const UserSchema = new Schema (
 
 //get count of thougths and reaction on retreival
 UserSchema.virtual('friendCount').get(function() {
-    return this.friends.length;
+    return this.friends.reduce(
+        (total, friends) => total + friends.reactions.length + 1,
+        0
+    );
        
 });
 

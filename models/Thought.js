@@ -9,15 +9,15 @@ const ReactionSchema = new Schema(
             type: Schema.Types.ObjectId,
             default: () => new Types.ObjectId()
         },
+        writtenBy: {
+            type: String,
+            required: true,
+            trim: true
+        },
         reactionBody: {
             type: String,
             required: true, 
             maxlength: 280
-        },
-        username: {
-            type: String,
-            required: true,
-            trim: true
         },
         createdAt: {
             type: Date,
