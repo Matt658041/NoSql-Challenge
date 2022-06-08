@@ -1,62 +1,67 @@
 const { Schema, model } = require('mongoose');
+const dateFormat = require('../utils/dateFormat')
 
-const UserSchema = new Schema (
-{
-      username: {
-          type: String,
-          required: true,
-          trim: true,
-          unique: true
-      },
-      createdAt: {
-          type: Date,
-          default: Date.now,
-          get: createdAtVal => dateFormat(createdAtVal)
-      },
-      email: {
-          type: String,
-          required:[ true, "Email required"],
-          unique: true,
-          lowercase: true,
-          validate: {
-            validator: function(v) {
-                return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
-            },
-            message: "Please enter a valid email"
-      }
-     },
-     friends: [
-         {
-             type:Schema.Types.ObjectId,
-             ref: 'Thought'
-         }
-     ],
-     thoughts: [
-         {
-             type: Schema.Types.ObjectId,
-             ref: 'Thought'
-         }
-     ]
-},
-{
-    toJson: {
-        virtuals: true,
-        getters: true
+const FriendSchema = new Schema(
+    {
+        friendName: {
+            type: String,
+            unique: true,
+            trim: true,
+            maxlength: 10,
+            required: true
+
+        }
     },
-    //prevents virtuals from creating duplicates
-    id: false
-}
+    {
+        toJSON: {
+            getters: true
+        },
+        id: false
+    }
 );
 
-//get count of thougths and reaction on retreival
-UserSchema.virtual('friendCount').get(function() {
-    return this.friends.reduce(
-        (total, friends) => total + friends.reactions.length + 1,
-        0
-    );
-       
+const UserSchema = new Schema({
+    username: {
+        type: String,
+        unique: true,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'This e-mail address is incorrect']
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        get: (createdAtVal) => dateFormat(createdAtVal)
+    },
+    thoughts: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Thought'
+        }
+    ],
+    friends: [FriendSchema]
+},
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true
+        },
+        id: false
+    }
+);
+
+//get total count of friends on retrieval
+UserSchema.virtual('friendCount').get(function () {
+    return this.friends.length;
 });
 
-const User = model('user', UserSchema);
+//create the User model using the UserSchema
+const User = model('User', UserSchema);
 
+//export the User model
 module.exports = User;

@@ -38,11 +38,13 @@ const ReactionSchema = new Schema(
             thoughtText: {
                 type: String,
                 required: true,
+                trim: true,
                 maxlength: 280
             },
             username: { 
                 type: String,
-                required: true
+                required: true,
+                trim: true
             },
            
             createdAt: {
